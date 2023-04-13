@@ -8,27 +8,27 @@ use Illuminate\Http\Request;
 use Session;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Order as OrderModel;
 
 class Order extends Controller
 {
     public function placeOrder(Request $request)
     {
-        $order = new \App\Models\Order();
-        $order->price = $this->getPrice();
-//        $order->customer_id = Auth::id();
+        $order = new OrderModel();
+        $order->setPrice($this->calculatePrice());
+        $order->setCustomerId(Auth::id());
         return view('order.form')
             ->with('order', $order);
     }
 
     public function saveOrder(Request $request)
     {
-        $name = $request->input('name');
-        $data['delivery_address'] = $request->input('delivery-address');
-        $data['price'] = $request->input('price');
-        $data['customer_id'] = $request->input('id');
-        $data['created_at'] = $data['updated_at'] = date('Y-m-d', time());
+        $order = new OrderModel();
+        $order->setDeliveryAddress($request->input('delivery-address'));
+        $order->setPrice($request->input('price'));
+        $order->setCustomerId($request->input('id'));
 
-        $product_data['order_id'] = DB::table('orders')->insert($data);
+        $product_data['order_id'] = $order->save();
 
         $items = Session::get('cartItems');
 
@@ -43,7 +43,8 @@ class Order extends Controller
         return view('order.thanks');
     }
 
-    public function getPrice() {
+    public function calculatePrice()
+    {
         $price = 0.00;
         $items = Session::get('cartItems');
         $different_items = array_count_values($items);

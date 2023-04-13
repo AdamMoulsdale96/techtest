@@ -15,7 +15,8 @@ class Product extends Controller
         ->with('products', ProductModel::all());
     }
 
-    public function addToCart(string $id) {
+    public function addToCart(string $id)
+    {
         if (!$id) {
             return null;
         }
@@ -32,7 +33,8 @@ class Product extends Controller
         return back();
     }
 
-    public function removeFromCart($id) {
+    public function removeFromCart($id)
+    {
         $items = Session::get('cartItems');
         foreach ($items as $item_id => $item) {
             if ($item === $id) {
@@ -43,7 +45,8 @@ class Product extends Controller
         return back();
     }
 
-    public function viewCart() {
+    public function viewCart()
+    {
         $product_list = [];
         $items = Session::get('cartItems');
         $different_items = array_count_values($items);

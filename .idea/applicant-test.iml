@@ -111,6 +111,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/finder" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/translation" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/laravel/ui" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
