@@ -9,9 +9,9 @@ class Order extends Model
 {
     use HasFactory;
 
-    private $price;
-    private $delivery_address;
-    private $customer_id;
+    protected $price;
+    protected $delivery_address;
+    protected $customer_id;
 
     public function getPrice()
     {
