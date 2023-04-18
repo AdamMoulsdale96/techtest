@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Models\OrderProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Session;
-use DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order as OrderModel;
 
@@ -14,31 +14,26 @@ class Order extends Controller
 {
     public function placeOrder(Request $request)
     {
-        $order = new OrderModel();
-        $order->setPrice($this->calculatePrice());
-        $order->setCustomerId(Auth::id());
+        $order = new OrderModel([
+            'price' => $this->calculatePrice(),
+            'customer_id' => Auth::id(),
+        ]);
+
         return view('order.form')
             ->with('order', $order);
     }
 
     public function saveOrder(Request $request)
     {
-        $order = new OrderModel();
-        $order->setDeliveryAddress($request->input('delivery-address'));
-        $order->setPrice($request->input('price'));
-        $order->setCustomerId($request->input('id'));
+        $order = new OrderModel([
+            'delivery_address' => $request->input('delivery-address'),
+            'price' => $request->input('price'),
+            'customer_id' => $request->input('id'),
+        ]);
 
-        $product_data['order_id'] = $order->save();
+        $order->save();
 
-        $items = Session::get('cartItems');
-
-        foreach ($items as $id) {
-            $product_data['product_id'] = $id;
-            $product_data['created_at'] = $product_data['updated_at'] = date('Y-m-d', time());
-            DB::table('order_products')->insert($product_data);
-        }
-
-        Session::put('cartItems', []);
+        $this->saveOrderProduct($order->id);
 
         return view('order.thanks');
     }
@@ -53,5 +48,20 @@ class Order extends Controller
             $price += $product['price'] * $quantity;
         }
         return $price;
+    }
+
+    public function saveOrderProduct($order_id) {
+        $items = Session::get('cartItems');
+
+        foreach ($items as $product_id) {
+            $order_product = new OrderProduct([
+                'product_id' => $product_id,
+                'order_id' => $order_id,
+            ]);
+
+            $order_product->save();
+        }
+
+        Session::put('cartItems', []);
     }
 }

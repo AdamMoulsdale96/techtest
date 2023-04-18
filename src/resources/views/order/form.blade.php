@@ -43,10 +43,10 @@
                             <label for="delivery-address">Delivery Address</label>
                             <textarea id="delivery-address" name="delivery-address" class="form-control" required="required"></textarea>
                         </div>
-                        <p>Price: {{ $order->getPrice() }}</p>
+                        <p>Price: £{{ number_format($order->price, 2, '.', ',') }}</p>
                         <div class="form-group">
-                            <input type="hidden" id="id" name="id" class="form-control" value="{{ $order->getCustomerId() }}">
-                            <input type="hidden" id="price" name="price" class="form-control" value="{{ $order->getPrice() }}">
+                            <input type="hidden" id="id" name="id" class="form-control" value="{{ $order->customer_id }}">
+                            <input type="hidden" id="price" name="price" class="form-control" value="{{ $order->price }}">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>

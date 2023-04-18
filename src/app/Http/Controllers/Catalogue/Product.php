@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Catalogue;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Session;
 use App\Models\Product as ProductModel;
 
@@ -20,15 +19,15 @@ class Product extends Controller
         if (!$id) {
             return null;
         }
-        $cart = Session::get('cartItems') ?? [];
-        if (is_string($cart)) {
+        $cart = Session::get('cartItems', []);
+        if (!is_array($cart)) {
             $cart = [$cart];
         }
-
 
         if (ProductModel::find($id)) {
             $cart[] = $id;
         }
+
         Session::put('cartItems', $cart);
         return back();
     }
@@ -41,6 +40,7 @@ class Product extends Controller
                 unset($items[$item_id]);
             }
         }
+
         Session::put('cartItems', $items);
         return back();
     }
@@ -62,6 +62,4 @@ class Product extends Controller
         return view('order.cart')
         ->with('products', $product_list);
     }
-
-
 }

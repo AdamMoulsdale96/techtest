@@ -39,10 +39,10 @@
                     @endif
                     @foreach($products as $id => $product)
                     <div>
-                        <p>Name: {{$product['name']}}</p>
-                        <p>SKU: {{$product['sku']}}</p>
-                        <p>Quantity: {{$product['quantity']}}</p>
-                        <p>Price: {{$product['price']}}</p>
+                        <p>Name: {{ $product['name'] }}</p>
+                        <p>SKU: {{ $product['sku'] }}</p>
+                        <p>Quantity: {{ $product['quantity'] }}</p>
+                        <p>Price: £{{ number_format($product['price'], 2, '.', ',') }}</p>
                         <a class="button" href="{{ route('cart.remove', $id) }}">Remove from cart</a>
                     </div>
                     @endforeach
